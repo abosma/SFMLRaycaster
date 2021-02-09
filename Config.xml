@@ -1,0 +1,8 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<configuration>
+  <screenSettings>
+    <monitor>1</monitor>
+    <screenWidth>640</screenWidth>
+    <screenHeight>480</screenHeight>
+  </screenSettings>
+</configuration>
