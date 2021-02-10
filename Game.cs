@@ -6,6 +6,7 @@ using SFMLRaycaster.Managers.Interfaces;
 using SFML.Graphics;
 using SFMLRaycaster.Entities.Interfaces;
 using SFMLRaycaster.Components;
+using System.Threading;
 
 namespace SFMLRaycaster
 {
@@ -19,25 +20,26 @@ namespace SFMLRaycaster
         public Game()
         {
             IManager EntityManager = new EntityManager();
-            IManager WindowManager = new WindowManager(window);
-
-            window.SetFramerateLimit(60);
 
             EventMessagingManager.Instance().Subscribe(Events.EventType.ADD_ENTITY, EntityManager);
 
             Entity entity = new Entity();
             entity.AddComponent(new Camera());
+            entity.AddComponent(new InputHandler());
 
             EventMessagingManager.Instance().Publish(new EventMessage(Events.EventType.ADD_ENTITY, entity));
 
-            while(window.IsOpen)
+            window.SetActive(false);
+
+            Thread drawThread = new Thread(new ParameterizedThreadStart(GameRenderer.RenderThread));
+            drawThread.Start(window);
+
+            while (window.IsOpen)
             {
                 deltaTime = clock.Restart().AsSeconds();
-                
                 window.DispatchEvents();
                 
                 EntityManager.Update(deltaTime);
-                WindowManager.Update(deltaTime);
             }
         }
     }

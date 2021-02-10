@@ -11,17 +11,17 @@ namespace SFMLRaycaster.Components
 
         public override void Start()
         {
-            Console.WriteLine("Transform Started");
+            return;
         }
 
         public override void Update(float deltaTime)
         {
-            //Console.WriteLine("Transform printed through Entity");
+            return;
         }
 
         public override void HandleMessage(EventMessage eventMessage)
         {
-            throw new NotImplementedException();
+            return;
         }
     }
 }

@@ -15,12 +15,12 @@ namespace SFMLRaycaster.Components
 
         public override void Update(float deltaTime)
         {
-            
+            return;
         }
 
         public override void HandleMessage(EventMessage eventMessage)
         {
-            throw new NotImplementedException();
+            return;
         }
     }
 }

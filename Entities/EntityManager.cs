@@ -10,19 +10,19 @@ namespace SFMLRaycaster.Managers
     {
         private List<Entity> entities = new List<Entity>();
 
-        public override void HandleMessage(EventMessage eventMessage)
-        {
-            if(eventMessage.eventType == EventType.ADD_ENTITY)
-            {
-                entities.Add(eventMessage.eventData);
-            }
-        }
-
         public override void Update(float deltaTime)
         {
             for(var i = 0; i < entities.Count; i++)
             {
                 entities[i].Update(deltaTime);
+            }
+        }
+
+        public override void HandleMessage(EventMessage eventMessage)
+        {
+            if (eventMessage.eventType == EventType.ADD_ENTITY)
+            {
+                entities.Add(eventMessage.eventData);
             }
         }
     }

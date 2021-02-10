@@ -3,6 +3,8 @@
     public enum EventType
     {
         CLOSE_WINDOW,
-        ADD_ENTITY
+        ADD_ENTITY,
+        KEY_DOWN,
+        KEY_UP
     }
 }
