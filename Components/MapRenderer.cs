@@ -1,32 +1,25 @@
 ﻿using SFML.Graphics;
 using SFMLRaycaster.Components.Interfaces;
 using SFMLRaycaster.Events;
+using SFMLRaycaster.Maps;
 using System;
 
 namespace SFMLRaycaster.Components
 {
     class MapRenderer : IComponent, Drawable
     {
-        private VertexArray mapVertexArray = new VertexArray(PrimitiveType.Lines);
+        public Map map;
+        public VertexArray vertexArray = new VertexArray(PrimitiveType.LineStrip);
 
         public override void Start()
         {
-            throw new NotImplementedException();
-        }
-
-        public override void Update(float deltaTime)
-        {
-            throw new NotImplementedException();
-        }
-
-        public override void HandleMessage(EventMessage eventMessage)
-        {
-            throw new NotImplementedException();
+            map = MapManager.map;
+            EventMessagingManager.Instance().Publish(new EventMessage(EventType.ADD_DRAWABLE, this));
         }
 
         public void Draw(RenderTarget target, RenderStates states)
         {
-            throw new NotImplementedException();
+            target.Draw(vertexArray, states);
         }
     }
 }

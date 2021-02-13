@@ -1,7 +1,5 @@
 ﻿using SFML.System;
 using SFMLRaycaster.Components.Interfaces;
-using SFMLRaycaster.Events;
-using System;
 
 namespace SFMLRaycaster.Components
 {
@@ -9,19 +7,21 @@ namespace SFMLRaycaster.Components
     {
         public Vector2f position = new Vector2f(0, 0);
 
-        public override void Start()
+        public Transform(float x, float y)
         {
-            return;
+            position = new Vector2f(x, y);
         }
 
-        public override void Update(float deltaTime)
+        public Transform(int x, int y)
         {
-            return;
+            position = new Vector2f(x, y);
         }
 
-        public override void HandleMessage(EventMessage eventMessage)
+        public Transform(Vector2f vector)
         {
-            return;
+            position = vector;
         }
+
+        public Transform() { }
     }
 }

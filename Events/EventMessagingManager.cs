@@ -14,8 +14,16 @@ namespace SFMLRaycaster.Events
         public void Publish(EventMessage eventMessage)
         {
             EventType eventType = eventMessage.eventType;
+            List<IEventMessageHandler> eventTypeHandlers;
 
-            var eventTypeHandlers = eventMessageHandlers[eventType];
+            try
+            {
+                eventTypeHandlers = eventMessageHandlers[eventType];
+            }
+            catch(Exception e)
+            {
+                return;
+            }
             
             for(var i = 0; i < eventTypeHandlers.Count; i++)
             {

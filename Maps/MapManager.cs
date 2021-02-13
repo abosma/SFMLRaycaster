@@ -9,7 +9,7 @@ namespace SFMLRaycaster.Maps
     {
         public static Map map;
 
-        public static void LoadMap(string mapFile = null)
+        static MapManager()
         {
             var mapArray = new int[,] {
                     { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 },
@@ -19,13 +19,18 @@ namespace SFMLRaycaster.Maps
                     { 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1 },
                     { 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1 },
                     { 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1 },
-                    { 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1 },
-                    { 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1 },
+                    { 1, 0, 0, 0, 0, 0, 0, 2, 2, 0, 1 },
+                    { 1, 0, 0, 0, 0, 0, 0, 2, 2, 0, 1 },
                     { 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1 },
                     { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 }
             };
 
             map = new Map(mapArray);
+        }
+
+        public static void LoadMap(string mapFile)
+        {
+            return;
         }
     }
 }

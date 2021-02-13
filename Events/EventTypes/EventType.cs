@@ -4,6 +4,7 @@
     {
         CLOSE_WINDOW,
         ADD_ENTITY,
+        ADD_DRAWABLE,
         KEY_DOWN,
         KEY_UP
     }

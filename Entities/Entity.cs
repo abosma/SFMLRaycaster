@@ -9,12 +9,24 @@ namespace SFMLRaycaster.Entities.Interfaces
 {
     public class Entity : IEventMessageHandler
     {
-        public Transform transform = new Transform();
+        public Transform transform;
+        public string EntityName = "";
         public List<IComponent> components = new List<IComponent>();
 
-        public Entity()
+        public Entity(string entityName = "", float x = 0, float y = 0)
         {
+            this.transform = new Transform(x, y);
+            this.EntityName = entityName;
             this.AddComponent(transform);
+            this.Start();
+        }
+
+        public void Start()
+        {
+            for (var i = 0; i < components.Count; i++)
+            {
+                components[i].Start();
+            }
         }
 
         public void Update(float deltaTime)
