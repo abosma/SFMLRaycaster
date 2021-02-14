@@ -2,6 +2,7 @@
 using SFMLRaycaster.Components.Interfaces;
 using SFMLRaycaster.Events;
 using SFMLRaycaster.Maps;
+using SFMLRaycaster.Textures;
 using System;
 
 namespace SFMLRaycaster.Components
@@ -19,6 +20,8 @@ namespace SFMLRaycaster.Components
 
         public void Draw(RenderTarget target, RenderStates states)
         {
+            states.Texture = TextureManager.wallTexture;
+
             target.Draw(vertexArray, states);
         }
     }

@@ -2,6 +2,7 @@
 using SFMLRaycaster.Components.Interfaces;
 using SFMLRaycaster.Events;
 using SFMLRaycaster.Managers.Interfaces;
+using SFMLRaycaster.Textures;
 using System.Collections.Generic;
 
 namespace SFMLRaycaster.Managers
@@ -14,6 +15,7 @@ namespace SFMLRaycaster.Managers
         public override void Start()
         {
             EventMessagingManager.Instance().Subscribe(EventType.ADD_DRAWABLE, this);
+            IManager textureManager = new TextureManager();
         }
 
         public void RenderThread(object window)

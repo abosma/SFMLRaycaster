@@ -2,7 +2,7 @@
 <configuration>
   <screenSettings>
     <monitor>1</monitor>
-    <screenWidth>640</screenWidth>
-    <screenHeight>480</screenHeight>
+    <screenWidth>1280</screenWidth>
+    <screenHeight>720</screenHeight>
   </screenSettings>
 </configuration>

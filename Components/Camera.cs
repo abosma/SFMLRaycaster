@@ -3,6 +3,8 @@ using SFML.Graphics;
 using SFML.System;
 using SFMLRaycaster.Events;
 using System;
+using SFMLRaycaster.Textures;
+using SFMLRaycaster.Managers;
 
 namespace SFMLRaycaster.Components
 {
@@ -11,8 +13,9 @@ namespace SFMLRaycaster.Components
         private Transform transform;
         private MapRenderer mapRenderer;
 
-        private int mapX, mapY, stepX, stepY, side, hit = 0;
-        public double posX, posY, cameraX, rayDirX, rayDirY, sideDistX, sideDistY, deltaDistX, deltaDistY, perpWallDist;
+        private int mapX, mapY, stepX, stepY, texX, texY, side, hit = 0;
+        private int[,] screenBuffer;
+        public double posX, posY, cameraX, rayDirX, rayDirY, sideDistX, sideDistY, deltaDistX, deltaDistY, perpWallDist, wallX;
         public double dirX = -1, dirY = 0;
         public double cameraPlaneX = 0, cameraPlaneY = 0.66;
 
@@ -26,6 +29,7 @@ namespace SFMLRaycaster.Components
         {
             double screenHeight = Config.screenHeight;
             double screenWidth = Config.screenWidth;
+            screenBuffer = new int[(int)screenHeight, (int)screenWidth];
 
             posX = transform.position.X;
             posY = transform.position.Y;
@@ -69,7 +73,7 @@ namespace SFMLRaycaster.Components
 
         private void CalculateStepAndSideDist()
         {
-            if(rayDirX < 0)
+            if (rayDirX < 0)
             {
                 stepX = -1;
                 sideDistX = (posX - mapX) * deltaDistX;
@@ -80,7 +84,7 @@ namespace SFMLRaycaster.Components
                 sideDistX = (mapX + 1.0 - posX) * deltaDistX;
             }
 
-            if(rayDirY < 0)
+            if (rayDirY < 0)
             {
                 stepY = -1;
                 sideDistY = (posY - mapY) * deltaDistY;
@@ -94,9 +98,9 @@ namespace SFMLRaycaster.Components
 
         private void CalculateDDA()
         {
-            while(hit == 0)
+            while (hit == 0)
             {
-                if(sideDistX < sideDistY)
+                if (sideDistX < sideDistY)
                 {
                     sideDistX += deltaDistX;
                     mapX += stepX;
@@ -109,7 +113,7 @@ namespace SFMLRaycaster.Components
                     side = 1;
                 }
 
-                if(mapRenderer.map.mapArray[mapX, mapY] > 0)
+                if (mapRenderer.map.mapArray[mapX, mapY] > 0)
                 {
                     hit = 1;
                 }
@@ -118,7 +122,7 @@ namespace SFMLRaycaster.Components
 
         private void CalculateDistanceProjection()
         {
-            if(side == 0)
+            if (side == 0)
             {
                 perpWallDist = (mapX - posX + (1 - stepX) / 2) / rayDirX;
             }
@@ -130,28 +134,72 @@ namespace SFMLRaycaster.Components
 
         private Vertex[] GenerateVertices(double screenHeight, int screenX)
         {
-            Color vertexColor = CalculateVertexColor();
-
             int lineHeight = (int)(screenHeight / perpWallDist);
             int lineStart = (int)(-lineHeight / 2 + screenHeight / 2);
             int lineEnd = (int)(lineHeight / 2 + screenHeight / 2);
 
-            if(lineStart < 0)
+            if (lineStart < 0)
             {
                 lineStart = 0;
             }
 
-            if(lineEnd >= screenHeight)
+            if (lineEnd >= screenHeight)
             {
                 lineEnd = (int)(screenHeight - 1);
             }
 
             Vertex[] toReturnVertices = new Vertex[2];
 
-            toReturnVertices[0] = new Vertex(new Vector2f(screenX, lineStart), vertexColor);
-            toReturnVertices[1] = new Vertex(new Vector2f(screenX, lineEnd), vertexColor);
+            var texCoords = CalculateTextureCoords();
+
+            toReturnVertices[0] = new Vertex(new Vector2f(screenX, lineStart), texCoords[0]);
+            toReturnVertices[1] = new Vertex(new Vector2f(screenX, lineEnd), texCoords[1]);
 
             return toReturnVertices;
+        }
+
+        private Vector2f[] CalculateTextureCoords()
+        {
+            Vector2f[] toReturnVectors = new Vector2f[2];
+
+            int tileType = mapRenderer.map.mapArray[mapX, mapY] - 1;
+            int texHeight = TextureManager.textureHeight;
+            int texWidth = TextureManager.textureWidth;
+            int wallTexSize = TextureManager.fullSize;
+
+            Vector2f texCoords = new Vector2f(tileType * texWidth % wallTexSize, tileType * texWidth / wallTexSize * texWidth);
+
+            double wallX;
+            if (side == 0)
+            {
+                wallX = posY + perpWallDist * rayDirY;
+            }
+            else
+            {
+                wallX = posX + perpWallDist * rayDirX;
+            }
+
+            wallX -= Math.Floor(wallX);
+
+            // Find out how to calculate texY for these textures.
+            // Might look lineHeight and find out which height should go to which vector.
+            int texX = (int)(wallX * texWidth);
+            if (side == 0 && rayDirX > 0)
+            {
+                texX = texWidth - texX - 1;
+            }
+
+            if (side == 1 && rayDirY < 0)
+            {
+                texX = texWidth - texX - 1;
+            }
+
+            texCoords.X += texX;
+
+            toReturnVectors[0] = new Vector2f(texCoords.X, texCoords.Y + 1);
+            toReturnVectors[1] = new Vector2f(texCoords.X, texCoords.Y + texWidth - 1);
+
+            return toReturnVectors;
         }
 
         private Color CalculateVertexColor()

@@ -10,20 +10,35 @@ namespace SFMLRaycaster.Managers
 {
     class DebugManager : IManager
     {
-        private Text text = new Text();
+        private Text fpsText = new Text();
+        private static Text consoleText = new Text();
+
         private int waitTime;
         private Font font;
 
+        private static StringBuilder consoleString = new StringBuilder(100);
+
         public override void Start()
         {
-            EventMessagingManager.Instance().Publish(new EventMessage(EventType.ADD_DRAWABLE, text));
+            EventMessagingManager.Instance().Publish(new EventMessage(EventType.ADD_DRAWABLE, fpsText));
+            EventMessagingManager.Instance().Publish(new EventMessage(EventType.ADD_DRAWABLE, consoleText));
 
             string fontFolderPath = $"{Environment.CurrentDirectory}\\Fonts\\";
             font = new Font(fontFolderPath + "SourceCodePro-Medium.ttf");
             
-            text.Font = font;
-            text.CharacterSize = 20;
-            text.FillColor = new Color(255, 255, 255);
+            fpsText.Font = font;
+            fpsText.CharacterSize = 20;
+            fpsText.FillColor = new Color(255, 255, 255);
+
+            consoleText.Font = font;
+            consoleText.CharacterSize = 20;
+            consoleText.FillColor = new Color(255, 255, 255);
+            consoleText.Position = new Vector2f(0, 640);
+        }
+
+        public static void WriteConsoleText(string text)
+        {
+            consoleText.DisplayedString = consoleString.Append(text).ToString();
         }
 
         public override void Update(float deltaTime)
@@ -32,7 +47,7 @@ namespace SFMLRaycaster.Managers
             {
                 float fps = 1f / deltaTime;
 
-                text.DisplayedString = $"FPS: {Math.Floor(fps)}";
+                fpsText.DisplayedString = $"FPS: {Math.Floor(fps)}";
 
                 waitTime = 1000;
             }

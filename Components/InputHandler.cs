@@ -12,7 +12,7 @@ namespace SFMLRaycaster.Components
         private Transform transform;
         private Camera camera;
         private double playerSpeed = 3;
-        private double playerRotationSpeed = 1;
+        private double playerRotationSpeed = 4;
 
         public override void Start()
         {
@@ -39,38 +39,30 @@ namespace SFMLRaycaster.Components
 
             if (Keyboard.IsKeyPressed(Keyboard.Key.Left))
             {
-                double oldDirX = camera.dirX;
-                double oldPlaneX = camera.cameraPlaneX;
-
-
-                camera.dirX = camera.dirX * Math.Cos(deltaRotationSpeed) - camera.dirY * Math.Sin(deltaRotationSpeed);
-                camera.dirY = oldDirX * Math.Sin(deltaRotationSpeed) + camera.dirY * Math.Cos(deltaRotationSpeed);
-
-                camera.cameraPlaneX = camera.cameraPlaneX * Math.Cos(deltaRotationSpeed) - camera.cameraPlaneY * Math.Sin(deltaRotationSpeed);
-                camera.cameraPlaneY = oldPlaneX * Math.Sin(deltaRotationSpeed) + camera.cameraPlaneY * Math.Cos(deltaRotationSpeed);
+                RotateHorizontal(deltaRotationSpeed);
             }
 
             if (Keyboard.IsKeyPressed(Keyboard.Key.Right))
             {
-                double oldDirX = camera.dirX;
-                double oldPlaneX = camera.cameraPlaneX;
-
-                camera.dirX = camera.dirX * Math.Cos(-deltaRotationSpeed) - camera.dirY * Math.Sin(-deltaRotationSpeed);
-                camera.dirY = oldDirX * Math.Sin(-deltaRotationSpeed) + camera.dirY * Math.Cos(-deltaRotationSpeed);
-
-                camera.cameraPlaneX = camera.cameraPlaneX * Math.Cos(-deltaRotationSpeed) - camera.cameraPlaneY * Math.Sin(-deltaRotationSpeed);
-                camera.cameraPlaneY = oldPlaneX * Math.Sin(-deltaRotationSpeed) + camera.cameraPlaneY * Math.Cos(-deltaRotationSpeed);
+                RotateHorizontal(-deltaRotationSpeed);
             }
         }
 
-        private void RotateLeft()
+        private void RotateHorizontal(double deltaRotationSpeed)
         {
+            double oldDirX = camera.dirX;
+            double oldPlaneX = camera.cameraPlaneX;
 
+            camera.dirX = camera.dirX * Math.Cos(deltaRotationSpeed) - camera.dirY * Math.Sin(deltaRotationSpeed);
+            camera.dirY = oldDirX * Math.Sin(deltaRotationSpeed) + camera.dirY * Math.Cos(deltaRotationSpeed);
+
+            camera.cameraPlaneX = camera.cameraPlaneX * Math.Cos(deltaRotationSpeed) - camera.cameraPlaneY * Math.Sin(deltaRotationSpeed);
+            camera.cameraPlaneY = oldPlaneX * Math.Sin(deltaRotationSpeed) + camera.cameraPlaneY * Math.Cos(deltaRotationSpeed);
         }
 
-        private void RotateRight()
+        private void RotateVertical(double deltaRotationSpeed)
         {
-
+            
         }
     }
 }
