@@ -15,6 +15,15 @@
             command: Compress-Archive .\Release\net5.0\* .\SFMLRaycaster.zip
         - store_artifacts:
             path: .\SFMLRaycaster.zip
-        - run:
-            name: "Publish Release on Github"
-            command: ghr -t ${GITHUB_TOKEN} -u ${CIRCLE_PROJECT_USERNAME} -r ${CIRCLE_PROJECT_REPONAME} -c ${CIRCLE_SHA1} -delete ${VERSION} .\SFMLRaycaster.zip
+        publish-github-release:
+          docker:
+            - image: circleci/golang:1.8
+          steps:
+            - attach_workspace:
+                at: .\SFMLRaycaster.zip
+            - run:
+                name: "Publish Release on GitHub"
+                command: |
+                  go get github.com/tcnksm/ghr
+                  VERSION=$(my-binary --version)
+                  ghr -t ${GITHUB_TOKEN} -u ${CIRCLE_PROJECT_USERNAME} -r ${CIRCLE_PROJECT_REPONAME} -c ${CIRCLE_SHA1} -delete ${VERSION} .\SFMLRaycaster.zip
