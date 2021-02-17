@@ -11,10 +11,10 @@
         - checkout
         - run: dotnet build -c Release
         - run:
-            name: Test
-            command: ls
-        - run:
             name: Compress Artifacts
             command: Compress-Archive .\Release\net5.0\* .\SFMLRaycaster.zip
         - store_artifacts:
             path: .\SFMLRaycaster.zip
+        - run:
+            name: "Publish Release on Github"
+            command: ghr -t ${GITHUB_TOKEN} -u ${CIRCLE_PROJECT_USERNAME} -r ${CIRCLE_PROJECT_REPONAME} -c ${CIRCLE_SHA1} -delete ${VERSION} .\SFMLRaycaster.zip
