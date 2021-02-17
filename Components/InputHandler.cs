@@ -27,24 +27,24 @@ namespace SFMLRaycaster.Components
             double deltaSpeed = playerSpeed * deltaTime;
             double deltaRotationSpeed = playerRotationSpeed * deltaTime;
 
-            if (Keyboard.IsKeyPressed(Keyboard.Key.W))
+            if (Keyboard.IsKeyPressed(Keyboard.Key.Up))
             {
                 transform.position.X += (float)(camera.dirX * deltaSpeed);
                 transform.position.Y += (float)(camera.dirY * deltaSpeed);
             }
 
-            if (Keyboard.IsKeyPressed(Keyboard.Key.S))
+            if (Keyboard.IsKeyPressed(Keyboard.Key.Down))
             {
                 transform.position.X -= (float)(camera.dirX * deltaSpeed);
                 transform.position.Y -= (float)(camera.dirY * deltaSpeed);
             }
 
-            if (Keyboard.IsKeyPressed(Keyboard.Key.A))
+            if (Keyboard.IsKeyPressed(Keyboard.Key.Left))
             {
                 RotateHorizontal(deltaRotationSpeed);
             }
 
-            if (Keyboard.IsKeyPressed(Keyboard.Key.D))
+            if (Keyboard.IsKeyPressed(Keyboard.Key.Right))
             {
                 RotateHorizontal(-deltaRotationSpeed);
             }

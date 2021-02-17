@@ -8,5 +8,10 @@
      executor: win/default     
     
      steps:
-       - checkout
-       - run: dotnet build
+        - checkout
+        - run: dotnet build
+        - run:
+            name: Compress Artifacts
+            command: zip -r SFMLRaycaster.zip ./Release/net5.0/*
+        - store_artifacts:
+            path: ./SFMLRaycaster.zip
