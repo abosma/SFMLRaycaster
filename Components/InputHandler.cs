@@ -12,12 +12,14 @@ namespace SFMLRaycaster.Components
         private Transform transform;
         private Camera camera;
         private double playerSpeed = 3;
-        private double playerRotationSpeed = 4;
+        private double playerRotationSpeed;
 
         public override void Start()
         {
             transform = entity.GetComponent<Transform>();
             camera = entity.GetComponent<Camera>();
+
+            playerRotationSpeed = Config.mouseSensitivity;
         }
 
         public override void Update(float deltaTime)
@@ -25,24 +27,24 @@ namespace SFMLRaycaster.Components
             double deltaSpeed = playerSpeed * deltaTime;
             double deltaRotationSpeed = playerRotationSpeed * deltaTime;
 
-            if (Keyboard.IsKeyPressed(Keyboard.Key.Up))
+            if (Keyboard.IsKeyPressed(Keyboard.Key.W))
             {
                 transform.position.X += (float)(camera.dirX * deltaSpeed);
                 transform.position.Y += (float)(camera.dirY * deltaSpeed);
             }
 
-            if (Keyboard.IsKeyPressed(Keyboard.Key.Down))
+            if (Keyboard.IsKeyPressed(Keyboard.Key.S))
             {
                 transform.position.X -= (float)(camera.dirX * deltaSpeed);
                 transform.position.Y -= (float)(camera.dirY * deltaSpeed);
             }
 
-            if (Keyboard.IsKeyPressed(Keyboard.Key.Left))
+            if (Keyboard.IsKeyPressed(Keyboard.Key.A))
             {
                 RotateHorizontal(deltaRotationSpeed);
             }
 
-            if (Keyboard.IsKeyPressed(Keyboard.Key.Right))
+            if (Keyboard.IsKeyPressed(Keyboard.Key.D))
             {
                 RotateHorizontal(-deltaRotationSpeed);
             }

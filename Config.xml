@@ -5,4 +5,7 @@
     <screenWidth>1280</screenWidth>
     <screenHeight>720</screenHeight>
   </screenSettings>
+  <controlSettings>
+    <mouseSensitivity>3,0</mouseSensitivity>
+  </controlSettings>
 </configuration>

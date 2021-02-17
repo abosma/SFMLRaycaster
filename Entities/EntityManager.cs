@@ -10,6 +10,11 @@ namespace SFMLRaycaster.Managers
     {
         private List<Entity> entities = new List<Entity>();
 
+        public override void Start()
+        {
+            EventMessagingManager.Instance().Subscribe(Events.EventType.ADD_ENTITY, this);
+        }
+
         public override void Update(float deltaTime)
         {
             for(var i = 0; i < entities.Count; i++)

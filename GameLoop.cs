@@ -6,8 +6,6 @@ using SFMLRaycaster.Events;
 using SFMLRaycaster.Managers;
 using SFMLRaycaster.Managers.Interfaces;
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace SFMLRaycaster
 {
@@ -19,8 +17,6 @@ namespace SFMLRaycaster
         {
             IManager entityManager = new EntityManager();
             IManager debugManager = new DebugManager();
-  
-            EventMessagingManager.Instance().Subscribe(Events.EventType.ADD_ENTITY, entityManager);
 
             Entity entity = new Entity(x: 5, y: 5);
             entity.AddComponent(new MapRenderer());

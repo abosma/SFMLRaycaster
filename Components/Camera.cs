@@ -13,8 +13,7 @@ namespace SFMLRaycaster.Components
         private Transform transform;
         private MapRenderer mapRenderer;
 
-        private int mapX, mapY, stepX, stepY, texX, texY, side, hit = 0;
-        private int[,] screenBuffer;
+        private int mapX, mapY, stepX, stepY, side, hit = 0;
         public double posX, posY, cameraX, rayDirX, rayDirY, sideDistX, sideDistY, deltaDistX, deltaDistY, perpWallDist, wallX;
         public double dirX = -1, dirY = 0;
         public double cameraPlaneX = 0, cameraPlaneY = 0.66;
@@ -29,7 +28,6 @@ namespace SFMLRaycaster.Components
         {
             double screenHeight = Config.screenHeight;
             double screenWidth = Config.screenWidth;
-            screenBuffer = new int[(int)screenHeight, (int)screenWidth];
 
             posX = transform.position.X;
             posY = transform.position.Y;
@@ -50,9 +48,11 @@ namespace SFMLRaycaster.Components
                 CalculateDistanceProjection();
 
                 Vertex[] vertices = GenerateVertices(screenHeight, x);
-
-                toDrawVertexArray.Append(vertices[0]);
-                toDrawVertexArray.Append(vertices[1]);
+                
+                for(var i = 0; i < vertices.Length; i++)
+                {
+                    toDrawVertexArray.Append(vertices[i]);
+                }
             }
 
             mapRenderer.vertexArray = new VertexArray(toDrawVertexArray);
@@ -148,14 +148,56 @@ namespace SFMLRaycaster.Components
                 lineEnd = (int)(screenHeight - 1);
             }
 
-            Vertex[] toReturnVertices = new Vertex[2];
+            Vector2f[] texCoords = CalculateTextureCoords();
+            Color vertexColor = CalculateVertexColor();
 
-            var texCoords = CalculateTextureCoords();
+            Vertex[] toReturnVertices = new Vertex[6];
 
-            toReturnVertices[0] = new Vertex(new Vector2f(screenX, lineStart), texCoords[0]);
-            toReturnVertices[1] = new Vertex(new Vector2f(screenX, lineEnd), texCoords[1]);
+            Vertex[] floorVertices = CalculateFloor(screenHeight, screenX);
+            Vertex[] ceilingVertices = CalculateCeiling(screenHeight, screenX);
+
+            toReturnVertices[0] = new Vertex(new Vector2f(screenX, lineStart), vertexColor, texCoords[0]);
+            toReturnVertices[1] = new Vertex(new Vector2f(screenX, lineEnd), vertexColor, texCoords[1]);
+            toReturnVertices[2] = floorVertices[0];
+            toReturnVertices[3] = floorVertices[1];
+            toReturnVertices[4] = ceilingVertices[0];
+            toReturnVertices[5] = ceilingVertices[1];
 
             return toReturnVertices;
+        }
+
+        private Vertex[] CalculateFloor(double screenHeight, int screenX)
+        {
+            Vertex[] floorVertices = new Vertex[2];
+
+            int groundPixel = (int)screenHeight;
+            double wallHeight = screenHeight / perpWallDist;
+            double cameraHeight = 0.5f;
+
+            floorVertices[0] = new Vertex(new Vector2f(screenX, groundPixel), new Color(64, 128, 128), new Vector2f(385.0f, 129.0f));
+
+            groundPixel = (int)(wallHeight * cameraHeight + screenHeight * 0.5f);
+
+            floorVertices[1] = new Vertex(new Vector2f(screenX, groundPixel), new Color(64, 128, 128), new Vector2f(385.0f, 129.0f));
+
+            return floorVertices;
+        }
+
+        private Vertex[] CalculateCeiling(double screenHeight, int screenX)
+        {
+            Vertex[] ceilingVertices = new Vertex[2];
+
+            int ceilingPixel = 0;
+            double wallHeight = screenHeight / perpWallDist;
+            double cameraHeight = 0.52f;
+
+            ceilingVertices[0] = new Vertex(new Vector2f(screenX, ceilingPixel), new Color(16, 196, 236), new Vector2f(385.0f, 129.0f));
+
+            ceilingPixel = (int)(-wallHeight * (1.0f - cameraHeight) + screenHeight * 0.5f);
+
+            ceilingVertices[1] = new Vertex(new Vector2f(screenX, ceilingPixel), new Color(16, 196, 236), new Vector2f(385.0f, 129.0f));
+
+            return ceilingVertices;
         }
 
         private Vector2f[] CalculateTextureCoords()
@@ -181,8 +223,6 @@ namespace SFMLRaycaster.Components
 
             wallX -= Math.Floor(wallX);
 
-            // Find out how to calculate texY for these textures.
-            // Might look lineHeight and find out which height should go to which vector.
             int texX = (int)(wallX * texWidth);
             if (side == 0 && rayDirX > 0)
             {
@@ -204,23 +244,7 @@ namespace SFMLRaycaster.Components
 
         private Color CalculateVertexColor()
         {
-            Color toReturnColor;
-
-            switch(mapRenderer.map.mapArray[mapX, mapY])
-            {
-                case 1:
-                    toReturnColor = new Color(255, 0, 0);
-                    break;
-                case 2:
-                    toReturnColor = new Color(0, 255, 0);
-                    break;
-                case 3:
-                    toReturnColor = new Color(0, 0, 255);
-                    break;
-                default:
-                    toReturnColor = new Color(0, 0, 0);
-                    break;
-            }
+            Color toReturnColor = new Color(255, 255, 255);
 
             if(side == 1)
             {
