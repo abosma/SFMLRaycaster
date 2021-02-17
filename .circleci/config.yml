@@ -24,6 +24,6 @@
         - run:
             name: Upload to Github
             command: |
-              XML = [Xml] (Get-Content .\MyApp.csproj)
+              XML = [Xml] (Get-Content .\SFMLRaycaster.csproj)
               VERSION = [Version] $XML.Project.PropertyGroup.Version
               .\ghr -t ${GITHUB_TOKEN} -u ${CIRCLE_PROJECT_USERNAME} -r ${CIRCLE_PROJECT_REPONAME} -c ${CIRCLE_SHA1} -delete ${VERSION} .\SFMLRaycaster.zip
