@@ -16,6 +16,11 @@
         - store_artifacts:
             path: .\SFMLRaycaster.zip
         - run:
-            name: Upload to Github
+            name: Download GHR
             command: |
-            curl 'https://api.github.com/repos/${CIRCLE_PROJECT_USERNAME}/${CIRCLE_PROJECT_REPONAME}/releases/:id/assets?access_token=${GITHUB_TOKEN}&name=${VERSION}' --header 'Content-Type: application/zip' --upload-file .\SFMLRaycaster.zip -X POST
+              curl -L https://github.com/tcnksm/ghr/releases/download/v0.13.0/ghr_v0.13.0_windows_amd64.zip > ghr.zip
+              Expand-Archive ghr.zip ghr
+              move .\ghr\ghr_v0.13.0_windows_amd64\ghr.exe .\
+        - run:
+            name: Upload to Github
+            command: .\ghr -t ${GITHUB_TOKEN} -u ${CIRCLE_PROJECT_USERNAME} -r ${CIRCLE_PROJECT_REPONAME} -c ${CIRCLE_SHA1} -delete ${VERSION} .\SFMLRaycaster.zip
