@@ -10,7 +10,6 @@
      steps:
         - checkout
         - run: dotnet build
-        - run: apt-get install -y zip
         - run:
             name: Compress Artifacts
             command: Compress-Archive ./SFMLRaycaster.zip ./Release/net5.0/*
