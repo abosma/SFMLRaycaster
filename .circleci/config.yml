@@ -23,4 +23,7 @@
               move .\ghr\ghr_v0.13.0_windows_amd64\ghr.exe .\
         - run:
             name: Upload to Github
-            command: .\ghr -t ${GITHUB_TOKEN} -u abosma -r SFMLRaycaster -c ${CIRCLE_SHA1} -delete ${VERSION} .\SFMLRaycaster.zip
+            command: |
+              XML = [Xml] (Get-Content .\MyApp.csproj)
+              VERSION = [Version] $XML.Project.PropertyGroup.Version
+              .\ghr -t ${GITHUB_TOKEN} -u ${CIRCLE_PROJECT_USERNAME} -r ${CIRCLE_PROJECT_REPONAME} -c ${CIRCLE_SHA1} -delete ${VERSION} .\SFMLRaycaster.zip
