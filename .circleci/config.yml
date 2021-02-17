@@ -18,7 +18,7 @@
         - run:
             name: Download GHR
             command: |
-              curl -L https://github.com/tcnksm/ghr/releases/download/v0.13.0/ghr_v0.13.0_windows_amd64.zip > ghr.zip
+              Invoke-WebRequest -Uri "https://github.com/tcnksm/ghr/releases/download/v0.13.0/ghr_v0.13.0_windows_amd64.zip" -OutFile ".\ghr.zip"
               Expand-Archive ghr.zip ghr
               move .\ghr\ghr_v0.13.0_windows_amd64\ghr.exe .\
         - run:
