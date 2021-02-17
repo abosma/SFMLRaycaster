@@ -12,6 +12,6 @@
         - run: dotnet build
         - run:
             name: Compress Artifacts
-            command: Compress-Archive ./SFMLRaycaster.zip ./Release/net5.0/*
+            command: Compress-Archive .\SFMLRaycaster.zip .\Release\net5.0\*
         - store_artifacts:
-            path: ./SFMLRaycaster.zip
+            path: .\SFMLRaycaster.zip
