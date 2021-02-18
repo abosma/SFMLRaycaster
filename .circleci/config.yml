@@ -1,26 +1,19 @@
  version: 2.1
-
  orbs:
   win: circleci/windows@2.2.0
-
+  github-release: h-matsuo/github-release@0.1.3
  jobs:
    build:
-     executor: win/default     
-    
+     executor: win/default
      steps:
         - checkout
         - run: dotnet build -c Release
         - run:
             name: Compress Artifacts
             command: Compress-Archive .\Release\net5.0\* .\SFMLRaycaster.zip
-        # - store_artifacts:
-        #     path: .\SFMLRaycaster.zip
-        - run:
-            name: Download GHR
-            command: |
-              Invoke-WebRequest -Uri "https://github.com/tcnksm/ghr/releases/download/v0.13.0/ghr_v0.13.0_windows_amd64.zip" -OutFile ".\ghr.zip"
-              Expand-Archive ghr.zip ghr
-              move .\ghr\ghr_v0.13.0_windows_amd64\ghr.exe .\
-        - run:
-            name: Upload to Github
-            command: .\ghr -t ${GITHUB_TOKEN} -u ${CIRCLE_PROJECT_USERNAME} -r ${CIRCLE_PROJECT_REPONAME} -c ${CIRCLE_SHA1} -delete ${VERSION} .\SFMLRaycaster.zip
+        - github-release/create:
+            tag: latest
+            title: Version latest
+            description: This release is version latest.
+            file-path: .\SFMLRaycaster.zip
+        
