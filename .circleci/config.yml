@@ -1,18 +1,27 @@
- version: 2.1
- orbs:
+version: 2.1
+orbs:
   win: circleci/windows@2.2.0
-  github-release: h-matsuo/github-release@0.1.3
- jobs:
-   build:
-     executor: win/default
-     steps:
-        - checkout
-        - run: dotnet build -c Release
-        - run:
-            name: Compress Artifacts
-            command: Compress-Archive .\Release\net5.0\* .\SFMLRaycaster.zip
-        - github-release/create:
-            tag: latest
-            title: Version latest
-            description: This release is version latest.
-            file-path: .\SFMLRaycaster.zip
+jobs:
+  build:
+    executor: win/default
+    steps:
+      - checkout
+      - run: dotnet build -c Release
+      - run:
+          name: Compress Artifacts
+          command: Compress-Archive .\Release\net5.0\* .\SFMLRaycaster.zip
+      - persist_to_workspace:
+          root: \
+          paths:
+            - .\SFMLRaycaster.zip
+  publish-github-release:
+    docker:
+      - image: cibuilds/github:0.10
+    steps:
+      - attach_workspace:
+          at: .\
+      - run:
+          name: "Publish Release on GitHub"
+          command: |
+            VERSION=$(my-binary --version)
+            ghr -t ${GITHUB_TOKEN} -u ${CIRCLE_PROJECT_USERNAME} -r ${CIRCLE_PROJECT_REPONAME} -c ${CIRCLE_SHA1} -delete ${VERSION} .\SFMLRaycaster.zip
