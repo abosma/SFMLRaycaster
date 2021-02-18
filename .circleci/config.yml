@@ -11,18 +11,18 @@ jobs:
           name: Compress Artifacts
           command: Compress-Archive .\Release\net5.0\* .\SFMLRaycaster.zip
       - persist_to_workspace:
-          root: \
+          root: .
           paths:
-            - .\SFMLRaycaster.zip
+            - .
   publish-github-release:
     docker:
       - image: cibuilds/github:0.10
     steps:
       - attach_workspace:
-          at: .\
+          at: .
       - run:
           name: "Publish Release on GitHub"
-          command: ghr -t ${GITHUB_TOKEN} -u ${CIRCLE_PROJECT_USERNAME} -r ${CIRCLE_PROJECT_REPONAME} -c ${CIRCLE_SHA1} -delete ${CIRCLE_BUILD_NUM} .\SFMLRaycaster.zip
+          command: 'ghr -t ${GITHUB_TOKEN} -u ${CIRCLE_PROJECT_USERNAME} -r ${CIRCLE_PROJECT_REPONAME} -c ${CIRCLE_SHA1} -delete ${CIRCLE_BUILD_NUM} ./SFMLRaycaster.zip'
 
 
 workflows:
