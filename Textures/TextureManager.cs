@@ -23,7 +23,6 @@ namespace SFMLRaycaster.Textures
 
         private Texture GetWallTextures(string spriteFolderPath)
         {
-            
             string wallTexturePath = spriteFolderPath + "WallTextures.png";
 
             Texture wallTexture = new Texture(wallTexturePath);

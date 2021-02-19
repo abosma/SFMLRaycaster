@@ -67,8 +67,8 @@ namespace SFMLRaycaster.Components
 
         private void CalculateDeltaDist()
         {
-            deltaDistX = (rayDirY == 0) ? 0 : ((rayDirX == 0) ? 1 : Math.Abs(1 / rayDirX));
-            deltaDistY = (rayDirX == 0) ? 0 : ((rayDirY == 0) ? 1 : Math.Abs(1 / rayDirY));
+            deltaDistX = Math.Sqrt(1 + rayDirY * rayDirY / (rayDirX * rayDirX));
+            deltaDistY = Math.Sqrt(1 + rayDirX * rayDirX / (rayDirY * rayDirY));
         }
 
         private void CalculateStepAndSideDist()
@@ -134,6 +134,29 @@ namespace SFMLRaycaster.Components
 
         private Vertex[] GenerateVertices(double screenHeight, int screenX)
         {
+            Vertex[] toReturnVertices = new Vertex[6];
+
+            Vertex[] wallVertices = CalculateWalls(screenHeight, screenX);
+            Vertex[] floorVertices = CalculateFloor(screenHeight, screenX);
+            Vertex[] ceilingVertices = CalculateCeiling(screenHeight, screenX);
+
+            toReturnVertices[0] = wallVertices[0];
+            toReturnVertices[1] = wallVertices[1];
+            toReturnVertices[2] = floorVertices[0];
+            toReturnVertices[3] = floorVertices[1];
+            toReturnVertices[4] = ceilingVertices[0];
+            toReturnVertices[5] = ceilingVertices[1];
+
+            return toReturnVertices;
+        }
+
+        private Vertex[] CalculateWalls(double screenHeight, int screenX)
+        {
+            Vertex[] wallVertices = new Vertex[2];
+
+            Vector2f[] texCoords = CalculateTextureCoords();
+            Color vertexColor = CalculateVertexColor();
+
             int lineHeight = (int)(screenHeight / perpWallDist);
             int lineStart = (int)(-lineHeight / 2 + screenHeight / 2);
             int lineEnd = (int)(lineHeight / 2 + screenHeight / 2);
@@ -148,22 +171,10 @@ namespace SFMLRaycaster.Components
                 lineEnd = (int)(screenHeight - 1);
             }
 
-            Vector2f[] texCoords = CalculateTextureCoords();
-            Color vertexColor = CalculateVertexColor();
+            wallVertices[0] = new Vertex(new Vector2f(screenX, lineStart), vertexColor, texCoords[0]);
+            wallVertices[1] = new Vertex(new Vector2f(screenX, lineEnd), vertexColor, texCoords[1]);
 
-            Vertex[] toReturnVertices = new Vertex[6];
-
-            Vertex[] floorVertices = CalculateFloor(screenHeight, screenX);
-            Vertex[] ceilingVertices = CalculateCeiling(screenHeight, screenX);
-
-            toReturnVertices[0] = new Vertex(new Vector2f(screenX, lineStart), vertexColor, texCoords[0]);
-            toReturnVertices[1] = new Vertex(new Vector2f(screenX, lineEnd), vertexColor, texCoords[1]);
-            toReturnVertices[2] = floorVertices[0];
-            toReturnVertices[3] = floorVertices[1];
-            toReturnVertices[4] = ceilingVertices[0];
-            toReturnVertices[5] = ceilingVertices[1];
-
-            return toReturnVertices;
+            return wallVertices;
         }
 
         private Vertex[] CalculateFloor(double screenHeight, int screenX)
@@ -174,11 +185,11 @@ namespace SFMLRaycaster.Components
             double wallHeight = screenHeight / perpWallDist;
             double cameraHeight = 0.5f;
 
-            floorVertices[0] = new Vertex(new Vector2f(screenX, groundPixel), new Color(64, 128, 128), new Vector2f(385.0f, 129.0f));
+            floorVertices[0] = new Vertex(new Vector2f(screenX, groundPixel), new Color(221, 234, 227));
 
             groundPixel = (int)(wallHeight * cameraHeight + screenHeight * 0.5f);
 
-            floorVertices[1] = new Vertex(new Vector2f(screenX, groundPixel), new Color(64, 128, 128), new Vector2f(385.0f, 129.0f));
+            floorVertices[1] = new Vertex(new Vector2f(screenX, groundPixel), new Color(221, 234, 227));
 
             return floorVertices;
         }
@@ -189,13 +200,13 @@ namespace SFMLRaycaster.Components
 
             int ceilingPixel = 0;
             double wallHeight = screenHeight / perpWallDist;
-            double cameraHeight = 0.52f;
+            double cameraHeight = 0.525f;
 
-            ceilingVertices[0] = new Vertex(new Vector2f(screenX, ceilingPixel), new Color(16, 196, 236), new Vector2f(385.0f, 129.0f));
+            ceilingVertices[0] = new Vertex(new Vector2f(screenX, ceilingPixel), new Color(98, 115, 135));
 
             ceilingPixel = (int)(-wallHeight * (1.0f - cameraHeight) + screenHeight * 0.5f);
 
-            ceilingVertices[1] = new Vertex(new Vector2f(screenX, ceilingPixel), new Color(16, 196, 236), new Vector2f(385.0f, 129.0f));
+            ceilingVertices[1] = new Vertex(new Vector2f(screenX, ceilingPixel), new Color(98, 115, 135));
 
             return ceilingVertices;
         }
@@ -236,8 +247,8 @@ namespace SFMLRaycaster.Components
 
             texCoords.X += texX;
 
-            toReturnVectors[0] = new Vector2f(texCoords.X, texCoords.Y + 1);
-            toReturnVectors[1] = new Vector2f(texCoords.X, texCoords.Y + texWidth - 1);
+            toReturnVectors[0] = new Vector2f(texCoords.X + 0.5f, texCoords.Y - 0.5f);
+            toReturnVectors[1] = new Vector2f(texCoords.X, texCoords.Y + texWidth);
 
             return toReturnVectors;
         }
