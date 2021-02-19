@@ -23,8 +23,8 @@ jobs:
       - run:
           name: "Publish Release on GitHub"
           command: |
-          'BUILD_SHA=${CIRCLE_SHA1:0:8}'
-          'ghr -t ${GITHUB_TOKEN} -u ${CIRCLE_PROJECT_USERNAME} -r ${CIRCLE_PROJECT_REPONAME} -c ${CIRCLE_SHA1} -delete 0.0.1.${BUILD_SHA} ./SFMLRaycaster.zip'
+            'BUILD_SHA=${CIRCLE_SHA1:0:8}'
+            'ghr -t ${GITHUB_TOKEN} -u ${CIRCLE_PROJECT_USERNAME} -r ${CIRCLE_PROJECT_REPONAME} -c ${CIRCLE_SHA1} -delete 0.0.1.${BUILD_SHA} ./SFMLRaycaster.zip'
 
 
 workflows:
