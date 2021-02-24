@@ -1,37 +1,36 @@
 ﻿using SFML.Graphics;
 using SFML.System;
 using SFMLRaycaster.Components;
-using SFMLRaycaster.Entities.Interfaces;
 using SFMLRaycaster.Events;
 using SFMLRaycaster.Managers;
 using SFMLRaycaster.Managers.Interfaces;
 using System;
+using SFMLRaycaster.Entities;
+using SFMLRaycaster.Events.EventTypes;
 
 namespace SFMLRaycaster
 {
     class GameLoop
     {
-        Clock clock = new Clock();
+        readonly Clock _clock = new Clock();
 
         public GameLoop(RenderWindow window)
         {
-            IManager entityManager = new EntityManager();
-            IManager debugManager = new DebugManager();
+            Manager entityManager = new EntityManager();
+            Manager debugManager = new DebugManager();
 
             Entity entity = new Entity(x: 5, y: 5);
             entity.AddComponent(new MapRenderer());
             entity.AddComponent(new Camera());
             entity.AddComponent(new InputHandler());
 
-            EventMessagingManager.Instance().Publish(new EventMessage(Events.EventType.ADD_ENTITY, entity));
+            EventMessagingManager.Instance().Publish(new EventMessage(EventType.ADD_ENTITY, entity));
 
             window.Closed += Window_Closed;
 
-            float deltaTime;
-
             while (window.IsOpen)
             {
-                deltaTime = clock.Restart().AsSeconds();
+                var deltaTime = _clock.Restart().AsSeconds();
                 
                 window.DispatchEvents();
 

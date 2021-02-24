@@ -3,11 +3,11 @@ using SFMLRaycaster.Components.Interfaces;
 using SFMLRaycaster.Events;
 using SFMLRaycaster.Maps;
 using SFMLRaycaster.Textures;
-using System;
+using SFMLRaycaster.Events.EventTypes;
 
 namespace SFMLRaycaster.Components
 {
-    class MapRenderer : IComponent, Drawable
+    class MapRenderer : Component, Drawable
     {
         public Map map;
         public VertexArray vertexArray = new VertexArray(PrimitiveType.LineStrip);

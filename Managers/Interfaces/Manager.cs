@@ -1,14 +1,15 @@
-﻿using SFML.Graphics;
-using SFMLRaycaster.Entities.Interfaces;
-using SFMLRaycaster.Events;
+﻿using SFMLRaycaster.Events;
 using SFMLRaycaster.Events.Interfaces;
 
-namespace SFMLRaycaster.Components.Interfaces
+namespace SFMLRaycaster.Managers.Interfaces
 {
-    public abstract class IComponent : IEventMessageHandler
+    abstract class Manager : IEventMessageHandler
     {
-        public Entity entity { get; set; }
-        
+        protected Manager()
+        {
+            this.Start();
+        }
+
         public virtual void Start()
         {
             return;

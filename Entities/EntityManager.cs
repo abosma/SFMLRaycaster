@@ -1,25 +1,24 @@
-﻿using SFMLRaycaster.Entities.Interfaces;
+﻿using System.Collections.Generic;
 using SFMLRaycaster.Events;
+using SFMLRaycaster.Events.EventTypes;
 using SFMLRaycaster.Managers.Interfaces;
-using System;
-using System.Collections.Generic;
 
-namespace SFMLRaycaster.Managers
+namespace SFMLRaycaster.Entities
 {
-    class EntityManager : IManager
+    class EntityManager : Manager
     {
-        private List<Entity> entities = new List<Entity>();
+        private readonly List<Entity> _entities = new List<Entity>();
 
         public override void Start()
         {
-            EventMessagingManager.Instance().Subscribe(Events.EventType.ADD_ENTITY, this);
+            EventMessagingManager.Instance().Subscribe(EventType.ADD_ENTITY, this);
         }
 
         public override void Update(float deltaTime)
         {
-            for(var i = 0; i < entities.Count; i++)
+            for(var i = 0; i < _entities.Count; i++)
             {
-                entities[i].Update(deltaTime);
+                _entities[i].Update(deltaTime);
             }
         }
 
@@ -27,7 +26,7 @@ namespace SFMLRaycaster.Managers
         {
             if (eventMessage.eventType == EventType.ADD_ENTITY)
             {
-                entities.Add(eventMessage.eventData);
+                _entities.Add(eventMessage.eventData);
             }
         }
     }

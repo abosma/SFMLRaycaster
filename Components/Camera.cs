@@ -1,27 +1,25 @@
 ﻿using SFMLRaycaster.Components.Interfaces;
 using SFML.Graphics;
 using SFML.System;
-using SFMLRaycaster.Events;
 using System;
 using SFMLRaycaster.Textures;
-using SFMLRaycaster.Managers;
 
 namespace SFMLRaycaster.Components
 {
-    class Camera : IComponent
+    class Camera : Component
     {
-        private Transform transform;
-        private MapRenderer mapRenderer;
+        private Transform _transform;
+        private MapRenderer _mapRenderer;
 
-        private int mapX, mapY, stepX, stepY, side, hit = 0;
+        private int _mapX, _mapY, _stepX, _stepY, _side, _hit;
         public double posX, posY, cameraX, rayDirX, rayDirY, sideDistX, sideDistY, deltaDistX, deltaDistY, perpWallDist, wallX;
         public double dirX = -1, dirY = 0;
         public double cameraPlaneX = 0, cameraPlaneY = 0.66;
 
         public override void Start()
         {
-            transform = entity.transform;
-            mapRenderer = entity.GetComponent<MapRenderer>();
+            _transform = Entity.transform;
+            _mapRenderer = Entity.GetComponent<MapRenderer>();
         }
 
         public override void Update(float deltaTime)
@@ -29,16 +27,16 @@ namespace SFMLRaycaster.Components
             double screenHeight = Config.screenHeight;
             double screenWidth = Config.screenWidth;
 
-            posX = transform.position.X;
-            posY = transform.position.Y;
+            posX = _transform.position.X;
+            posY = _transform.position.Y;
 
             VertexArray toDrawVertexArray = new VertexArray(PrimitiveType.Lines);
 
             for (var x = 0; x < screenWidth; x++)
             {
-                hit = 0;
-                mapX = (int)posX;
-                mapY = (int)posY;
+                _hit = 0;
+                _mapX = (int)posX;
+                _mapY = (int)posY;
                 cameraX = 2 * x / screenWidth - 1;
 
                 CalculateRayDir(cameraX);
@@ -55,7 +53,7 @@ namespace SFMLRaycaster.Components
                 }
             }
 
-            mapRenderer.vertexArray = new VertexArray(toDrawVertexArray);
+            _mapRenderer.vertexArray = new VertexArray(toDrawVertexArray);
             toDrawVertexArray.Clear();
         }
 
@@ -75,60 +73,60 @@ namespace SFMLRaycaster.Components
         {
             if (rayDirX < 0)
             {
-                stepX = -1;
-                sideDistX = (posX - mapX) * deltaDistX;
+                _stepX = -1;
+                sideDistX = (posX - _mapX) * deltaDistX;
             }
             else
             {
-                stepX = 1;
-                sideDistX = (mapX + 1.0 - posX) * deltaDistX;
+                _stepX = 1;
+                sideDistX = (_mapX + 1.0 - posX) * deltaDistX;
             }
 
             if (rayDirY < 0)
             {
-                stepY = -1;
-                sideDistY = (posY - mapY) * deltaDistY;
+                _stepY = -1;
+                sideDistY = (posY - _mapY) * deltaDistY;
             }
             else
             {
-                stepY = 1;
-                sideDistY = (mapY + 1.0 - posY) * deltaDistY;
+                _stepY = 1;
+                sideDistY = (_mapY + 1.0 - posY) * deltaDistY;
             }
         }
 
         private void CalculateDDA()
         {
-            while (hit == 0)
+            while (_hit == 0)
             {
                 if (sideDistX < sideDistY)
                 {
                     sideDistX += deltaDistX;
-                    mapX += stepX;
-                    side = 0;
+                    _mapX += _stepX;
+                    _side = 0;
                 }
                 else
                 {
                     sideDistY += deltaDistY;
-                    mapY += stepY;
-                    side = 1;
+                    _mapY += _stepY;
+                    _side = 1;
                 }
 
-                if (mapRenderer.map.mapArray[mapX, mapY] > 0)
+                if (_mapRenderer.map.mapArray[_mapX, _mapY] > 0)
                 {
-                    hit = 1;
+                    _hit = 1;
                 }
             }
         }
 
         private void CalculateDistanceProjection()
         {
-            if (side == 0)
+            if (_side == 0)
             {
-                perpWallDist = (mapX - posX + (1 - stepX) / 2) / rayDirX;
+                perpWallDist = (_mapX - posX + (1 - _stepX) / 2) / rayDirX;
             }
             else
             {
-                perpWallDist = (mapY - posY + (1 - stepY) / 2) / rayDirY;
+                perpWallDist = (_mapY - posY + (1 - _stepY) / 2) / rayDirY;
             }
         }
 
@@ -215,15 +213,14 @@ namespace SFMLRaycaster.Components
         {
             Vector2f[] toReturnVectors = new Vector2f[2];
 
-            int tileType = mapRenderer.map.mapArray[mapX, mapY] - 1;
+            int tileType = _mapRenderer.map.mapArray[_mapX, _mapY] - 1;
             int texHeight = TextureManager.textureHeight;
             int texWidth = TextureManager.textureWidth;
             int wallTexSize = TextureManager.fullSize;
 
             Vector2f texCoords = new Vector2f(tileType * texWidth % wallTexSize, tileType * texWidth / wallTexSize * texWidth);
 
-            double wallX;
-            if (side == 0)
+            if (_side == 0)
             {
                 wallX = posY + perpWallDist * rayDirY;
             }
@@ -235,12 +232,12 @@ namespace SFMLRaycaster.Components
             wallX -= Math.Floor(wallX);
 
             int texX = (int)(wallX * texWidth);
-            if (side == 0 && rayDirX > 0)
+            if (_side == 0 && rayDirX > 0)
             {
                 texX = texWidth - texX - 1;
             }
 
-            if (side == 1 && rayDirY < 0)
+            if (_side == 1 && rayDirY < 0)
             {
                 texX = texWidth - texX - 1;
             }
@@ -257,7 +254,7 @@ namespace SFMLRaycaster.Components
         {
             Color toReturnColor = new Color(255, 255, 255);
 
-            if(side == 1)
+            if(_side == 1)
             {
                 toReturnColor = new Color((byte)(toReturnColor.R / 2), (byte)(toReturnColor.G / 2), (byte)(toReturnColor.B / 2));
             }

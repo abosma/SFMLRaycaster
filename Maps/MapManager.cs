@@ -1,11 +1,8 @@
 ﻿using SFMLRaycaster.Managers.Interfaces;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace SFMLRaycaster.Maps
 {
-    class MapManager : IManager
+    class MapManager : Manager
     {
         public static Map map;
 

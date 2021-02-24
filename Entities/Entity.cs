@@ -1,22 +1,22 @@
-﻿using SFMLRaycaster.Components;
+﻿using System;
+using System.Collections.Generic;
+using SFMLRaycaster.Components;
 using SFMLRaycaster.Components.Interfaces;
 using SFMLRaycaster.Events;
 using SFMLRaycaster.Events.Interfaces;
-using System;
-using System.Collections.Generic;
 
-namespace SFMLRaycaster.Entities.Interfaces
+namespace SFMLRaycaster.Entities
 {
     public class Entity : IEventMessageHandler
     {
         public Transform transform;
-        public string EntityName = "";
-        public List<IComponent> components = new List<IComponent>();
+        public string entityName;
+        public List<Component> components = new List<Component>();
 
         public Entity(string entityName = "", float x = 0, float y = 0)
         {
             this.transform = new Transform(x, y);
-            this.EntityName = entityName;
+            this.entityName = entityName;
             this.AddComponent(transform);
             this.Start();
         }
@@ -80,13 +80,13 @@ namespace SFMLRaycaster.Entities.Interfaces
             return toReturnComponents;
         }
 
-        public IComponent AddComponent(IComponent component)
+        public Component AddComponent(Component component)
         {
             if (!components.Contains(component))
             {
                 components.Add(component);
 
-                component.entity = this;
+                component.Entity = this;
                 component.Start();
 
                 return component;
@@ -95,7 +95,7 @@ namespace SFMLRaycaster.Entities.Interfaces
             return null;
         }
 
-        public void RemoveComponent(IComponent component)
+        public void RemoveComponent(Component component)
         {
             if (components.Contains(component))
             {

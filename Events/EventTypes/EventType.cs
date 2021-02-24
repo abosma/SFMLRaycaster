@@ -1,4 +1,4 @@
-﻿namespace SFMLRaycaster.Events
+﻿namespace SFMLRaycaster.Events.EventTypes
 {
     public enum EventType
     {

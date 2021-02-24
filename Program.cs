@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace SFMLRaycaster
+﻿namespace SFMLRaycaster
 {
     static class Program
     {

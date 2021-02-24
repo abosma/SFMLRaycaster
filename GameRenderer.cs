@@ -1,34 +1,34 @@
-﻿using SFML.Graphics;
-using SFMLRaycaster.Components.Interfaces;
+﻿using System.Collections.Generic;
+using SFML.Graphics;
 using SFMLRaycaster.Events;
+using SFMLRaycaster.Events.EventTypes;
 using SFMLRaycaster.Managers.Interfaces;
 using SFMLRaycaster.Textures;
-using System.Collections.Generic;
 
-namespace SFMLRaycaster.Managers
+namespace SFMLRaycaster
 {
-    class GameRenderer : IManager
+    class GameRenderer : Manager
     {
-        private RenderWindow renderWindow;
-        private List<Drawable> _drawables = new List<Drawable>();
+        private RenderWindow _renderWindow;
+        private readonly List<Drawable> _drawables = new List<Drawable>();
 
         public override void Start()
         {
             EventMessagingManager.Instance().Subscribe(EventType.ADD_DRAWABLE, this);
-            IManager textureManager = new TextureManager();
+            Manager textureManager = new TextureManager();
         }
 
         public void RenderThread(object window)
         {
-            renderWindow = (RenderWindow)window;
+            _renderWindow = (RenderWindow)window;
 
-            renderWindow.SetActive(true);
+            _renderWindow.SetActive(true);
 
-            while(renderWindow.IsOpen)
+            while(_renderWindow.IsOpen)
             {
-                renderWindow.Clear();
+                _renderWindow.Clear();
                 DrawDrawables();
-                renderWindow.Display();
+                _renderWindow.Display();
             }
         }
 
@@ -36,7 +36,7 @@ namespace SFMLRaycaster.Managers
         {
             for(var i = 0; i < _drawables.Count; i++)
             {
-                _drawables[i].Draw(renderWindow, RenderStates.Default);
+                _drawables[i].Draw(_renderWindow, RenderStates.Default);
             }
         }
 

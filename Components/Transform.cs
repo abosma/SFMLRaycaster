@@ -3,7 +3,7 @@ using SFMLRaycaster.Components.Interfaces;
 
 namespace SFMLRaycaster.Components
 {
-    public class Transform : IComponent
+    public class Transform : Component
     {
         public Vector2f position = new Vector2f(0, 0);
 

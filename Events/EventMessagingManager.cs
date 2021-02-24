@@ -1,13 +1,15 @@
 ﻿using SFMLRaycaster.Events.Interfaces;
 using System.Collections.Generic;
 using System;
+using SFMLRaycaster.Events.EventTypes;
 
 namespace SFMLRaycaster.Events
 {
     class EventMessagingManager : IEventMessagingManager
     {
         private static EventMessagingManager _instance;
-        private Dictionary<EventType, List<IEventMessageHandler>> eventMessageHandlers = new Dictionary<EventType, List<IEventMessageHandler>>();
+        private readonly Dictionary<EventType, List<IEventMessageHandler>> _eventMessageHandlers = 
+            new Dictionary<EventType, List<IEventMessageHandler>>();
 
         private EventMessagingManager() { }
 
@@ -18,7 +20,7 @@ namespace SFMLRaycaster.Events
 
             try
             {
-                eventTypeHandlers = eventMessageHandlers[eventType];
+                eventTypeHandlers = _eventMessageHandlers[eventType];
             }
             catch(Exception e)
             {
@@ -39,11 +41,11 @@ namespace SFMLRaycaster.Events
         {
             try
             {
-                eventMessageHandlers[eventType].Add(eventMessageHandler);
+                _eventMessageHandlers[eventType].Add(eventMessageHandler);
             } 
             catch
             {
-                eventMessageHandlers.Add(eventType, new List<IEventMessageHandler> { eventMessageHandler });
+                _eventMessageHandlers.Add(eventType, new List<IEventMessageHandler> { eventMessageHandler });
             }
         }
 

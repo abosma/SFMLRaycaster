@@ -1,11 +1,10 @@
 ﻿using SFMLRaycaster.Managers.Interfaces;
 using System;
-using System.IO;
 using SFML.Graphics;
 
 namespace SFMLRaycaster.Textures
 {
-    class TextureManager : IManager
+    class TextureManager : Manager
     {
         public static int textureHeight = 32;
         public static int textureWidth = 32;

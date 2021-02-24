@@ -1,4 +1,6 @@
-﻿namespace SFMLRaycaster.Events
+﻿using SFMLRaycaster.Events.EventTypes;
+
+namespace SFMLRaycaster.Events
 {
     public class EventMessage
     {

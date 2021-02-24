@@ -1,4 +1,6 @@
-﻿namespace SFMLRaycaster.Events.Interfaces
+﻿using SFMLRaycaster.Events.EventTypes;
+
+namespace SFMLRaycaster.Events.Interfaces
 {
     interface IEventMessagingManager
     {
